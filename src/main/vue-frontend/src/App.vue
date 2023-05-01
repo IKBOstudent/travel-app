@@ -1,19 +1,10 @@
 <template>
     <div class="contianer p-4">
-        <flights-page />
+        <router-view></router-view>
     </div>
 </template>
 
-<script>
-import FlightsPage from './components/Flights/FlightsPage.vue';
-
-export default {
-    components: {
-        FlightsPage,
-    },
-    data() {},
-};
-</script>
+<script></script>
 
 <style>
 * {

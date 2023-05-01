@@ -1,11 +1,5 @@
 <template>
-    <div
-        :class="[
-            { active: active === flight.id },
-            'p-4 cursor-pointer flex flex-row border gap-4 justify-between',
-        ]"
-        @click="$emit('update:active', this.flight.id)"
-    >
+    <div class="p-4 cursor-pointer flex flex-row border gap-4 justify-between">
         <div class="flex flex-col">
             <div>Дата: {{ flight.date }} Время: {{ flight.time }}</div>
 
@@ -24,21 +18,8 @@ export default {
         flight: {
             require: true,
         },
-        active: {
-            require: true,
-        },
     },
 
     methods: {},
 };
 </script>
-
-<style>
-.flight {
-    cursor: pointer;
-}
-
-.active {
-    background-color: darkgrey;
-}
-</style>

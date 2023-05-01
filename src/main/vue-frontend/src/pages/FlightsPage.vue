@@ -1,23 +1,23 @@
 <template>
-    <div>
-        <flight-form />
+    <div class="container mx-auto px-4">
+        <div>
+            Результаты поиска: рейсы {{ $route.query.origin }} - {{ $route.query.destination }}
+        </div>
         <div v-if="!loading && flights.length > 0" class="py-2 flex flex-col gap-2">
             <flight-card v-for="flight in flights" :key="flight.id" :flight="flight" />
         </div>
         <div v-else-if="!loading && flights.length === 0">Рейсов не найдено</div>
-        <div v-else>Loading...</div>
+        <div v-else>Загрузка...</div>
     </div>
 </template>
 
 <script>
 // import axios from 'axios';
 
-import FlightCard from './FlightCard.vue';
-import FlightForm from './FlightForm.vue';
+import FlightCard from '@/components/Flights/FlightCard.vue';
 
 export default {
     components: {
-        FlightForm,
         FlightCard,
     },
     data() {
@@ -46,6 +46,7 @@ export default {
     methods: {
         async fetchFlights() {
             try {
+                console.log(this.$route.query);
                 // await new Promise((res) => {
                 //     setTimeout(async () => {
                 //         const url = `http://localhost:8080/api/flights?origin=${

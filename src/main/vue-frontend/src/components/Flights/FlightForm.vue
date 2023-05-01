@@ -1,13 +1,12 @@
 <template>
     <div>
-        <form @submit.prevent="handleFindFlight" class="container w-80 flex flex-col gap-2">
-            <h4>Выбор перелета</h4>
+        <form @submit.prevent="handleFindFlight" class="container max-w-md flex flex-col gap-2">
             <input
                 :value="origin"
                 class="border py-2 px-4 rounded-none w-full"
                 type="text"
                 placeholder="Откуда"
-                @input="setFrom"
+                @input="setOrigin"
             />
 
             <input
@@ -15,7 +14,7 @@
                 class="border py-2 px-4 rounded-none w-full"
                 type="text"
                 placeholder="Куда"
-                @input="setTo"
+                @input="setDestination"
             />
 
             <vue-date-picker
@@ -32,7 +31,9 @@
                 input-class-name="border py-2 pl-8 rounded-none"
                 placeholder="Обратно"
             ></vue-date-picker>
-            <button class="py-2 px-4 bg-slate-300 active:scale-95" type="submit">Найти</button>
+            <button class="py-2 px-4 bg-slate-800 text-white active:scale-95" type="submit">
+                Найти
+            </button>
         </form>
     </div>
 </template>
@@ -53,20 +54,27 @@ export default {
     },
     methods: {
         handleFindFlight() {
-            console.log(this.origin, this.destination, this.departureDate, this.returnDate);
-            this.origin = '';
-            this.destination = '';
-            this.departureDate = null;
-            this.returnDate = null;
+            if (this.origin === '' || this.destination === '' || this.departureDate === null) {
+                alert('Остались пустые поля');
+            } else {
+                console.log(this.origin, this.destination, this.departureDate, this.returnDate);
+                this.$router.push({
+                    path: 'flights',
+                    query: {
+                        origin: this.origin,
+                        destination: this.destination,
+                        departureDate: this.departureDate.toISOString().split('T')[0],
+                        returnDate: this.returnDate && this.returnDate.toISOString().split('T')[0],
+                    },
+                });
+            }
         },
-        setFrom(event) {
-            this.from = event.target.value;
+        setOrigin(event) {
+            this.origin = event.target.value;
         },
-        setTo(event) {
-            this.to = event.target.value;
+        setDestination(event) {
+            this.destination = event.target.value;
         },
     },
 };
 </script>
-
-<style></style>
