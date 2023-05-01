@@ -5,6 +5,7 @@ import com.travelapp.Repositories.FlightRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -18,6 +19,14 @@ public class FlightService {
 
     public List<Flight> getAllFlights() {
         return flightRepository.findAll();
+    }
+
+    public List<Flight> getFlights(
+            String origin,
+            String destination,
+            LocalDate date
+    ) {
+        return flightRepository.find(origin, destination, date);
     }
 
     public boolean createFlight(Flight flight) {
