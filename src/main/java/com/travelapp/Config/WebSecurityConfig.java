@@ -6,6 +6,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -32,16 +33,21 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .csrf().disable()
                 .authorizeHttpRequests()
                     .anyRequest()
                     .permitAll()
                     .and()
-                .formLogin()
-                    .loginPage("/api/admin/login")
+                .httpBasic().and()
+                .formLogin().disable()
+                .logout()
+                    .logoutUrl("/api/admin/logout")
+                    .logoutSuccessUrl("/")
+                    .invalidateHttpSession(true)
                     .permitAll()
                     .and()
-                .httpBasic().disable()
-                .csrf().disable()
+                .sessionManagement()
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
 
                 ;

@@ -30,7 +30,7 @@ public class FlightService {
             String destination,
             LocalDate date
     ) {
-        List<Flight> found = flightRepository.findByOriginDestinationDate(
+        List<Flight> found = flightRepository.findByOriginAndDestinationAndDate(
                 origin, destination, date
         );
 

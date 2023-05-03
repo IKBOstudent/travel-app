@@ -9,9 +9,5 @@ import java.util.List;
 
 public interface FlightRepository extends JpaRepository<Flight, Long> {
 
-    @Query("select distinct s from Flight s "
-            + "where (s.origin = :origin) "
-            + "and (s.destination = :destination) "
-            + "and (s.date = :date) ")
-    List<Flight> findByOriginDestinationDate(String origin, String destination, LocalDate date);
+    List<Flight> findByOriginAndDestinationAndDate(String origin, String destination, LocalDate date);
 }

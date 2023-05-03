@@ -3,21 +3,22 @@ package com.travelapp.Models;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
+
 
 @Getter
 @Setter
+@NoArgsConstructor
+@ToString
 @Entity
 @Table(name="reservations_table")
 public class Reservation {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @ManyToOne
@@ -33,11 +34,7 @@ public class Reservation {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate checkOutDate;
 
-    public Reservation() {
-    }
-
-    public Reservation(Long id, Room room, LocalDate checkInDate, LocalDate checkOutDate) {
-        this.id = id;
+    public Reservation(Room room, LocalDate checkInDate, LocalDate checkOutDate) {
         this.room = room;
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
@@ -45,15 +42,5 @@ public class Reservation {
 
     public long getNights() {
         return ChronoUnit.DAYS.between(checkInDate, checkOutDate);
-    }
-
-    @Override
-    public String toString() {
-        return "Reservation{" +
-                "id=" + id +
-                ", room=" + room +
-                ", checkInDate=" + checkInDate +
-                ", checkOutDate=" + checkOutDate +
-                '}';
     }
 }

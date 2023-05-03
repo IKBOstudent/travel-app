@@ -40,7 +40,7 @@ public class ReservationService {
             roomRepository.save(room);
 //            reservationRepository.save(reservation);
 
-            log.info("created reservation");
+            log.info("created reservation " + reservation);
             return true;
         }
 

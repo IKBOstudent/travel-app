@@ -26,15 +26,6 @@ public class ReservationController {
         this.reservationService = reservationService;
     }
 
-//    @GetMapping()
-//    public ResponseEntity<List<Reservation>> getReservations(
-
-//    ) {
-//        return ResponseEntity
-//                .ok()
-//                .body(reservationService.getReservations(origin, destination, date));
-//    }
-
     @GetMapping("/all")
     public ResponseEntity<List<Reservation>> getAllReservations() {
 
@@ -57,7 +48,7 @@ public class ReservationController {
                 .body(columns);
     }
 
-    @PreAuthorize("isAuthenticated()")
+//    @PreAuthorize("isAuthenticated()")
     @PostMapping()
     public ResponseEntity<Reservation> createReservation(
             @RequestParam(value = "room_id") Long roomId,

@@ -2,6 +2,7 @@ package com.travelapp.Controllers;
 
 import com.travelapp.Models.Flight;
 import com.travelapp.Models.Hotel;
+import com.travelapp.Models.Room;
 import com.travelapp.Services.HotelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,15 +26,6 @@ public class HotelController {
     public HotelController(HotelService hotelService) {
         this.hotelService = hotelService;
     }
-
-//    @GetMapping()
-//    public ResponseEntity<List<Hotel>> getHotels(
-
-//    ) {
-//        return ResponseEntity
-//                .ok()
-//                .body(hotelService.getHotels(origin, destination, date));
-//    }
 
     @GetMapping("/metadata")
     public ResponseEntity<List<String>> getMetadata() {

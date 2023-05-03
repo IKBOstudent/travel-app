@@ -157,7 +157,7 @@ export default {
                     }, 1000);
                 });
             } catch (e) {
-                // alert('Error', e);
+                alert('Error', e);
             } finally {
                 this.isTableLoading = false;
                 console.log('update');

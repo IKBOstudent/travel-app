@@ -5,10 +5,12 @@ import com.travelapp.Models.Room;
 import com.travelapp.Services.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Field;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,14 +26,17 @@ public class RoomController {
         this.roomService = roomService;
     }
 
-//    @GetMapping()
-//    public ResponseEntity<List<Room>> getRooms(
-
-//    ) {
-//        return ResponseEntity
-//                .ok()
-//                .body(roomService.getRooms(origin, destination, date));
-//    }
+    @GetMapping()
+    public ResponseEntity<List<Room>> getRoom(
+            @RequestParam(value = "city") String city,
+            @RequestParam(value = "guests") int guests,
+            @RequestParam(value = "check_in_date") LocalDate checkInDate,
+            @RequestParam(value = "check_out_date") LocalDate checkOutDate
+    ) {
+        return ResponseEntity
+                .ok()
+                .body(roomService.getRooms(city, guests, checkInDate, checkOutDate));
+    }
 
     @GetMapping("/metadata")
     public ResponseEntity<List<String>> getMetadata() {
@@ -55,7 +60,7 @@ public class RoomController {
                 .body(roomService.getAllRooms());
     }
 
-    //    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated()")
     @PostMapping()
     public ResponseEntity<Room> createRoom(
             @RequestParam(value = "hotel_id") Long hotelId,
@@ -67,6 +72,7 @@ public class RoomController {
         }
     }
 
+    @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteRoom(@PathVariable Long id) {
         if (roomService.deleteRoom(id)) {

@@ -1,18 +1,37 @@
 <template>
     <div class="container mx-auto px-4">
-        <div>
-            Результаты поиска: рейсы {{ $route.query.origin }} - {{ $route.query.destination }}
+        <div>Результаты поиска:</div>
+        <div v-if="!loading" class="py-2 flex flex-col gap-4">
+            <div>
+                Рейсы {{ $route.query.origin }} - {{ $route.query.destination }}
+                <br />
+                на {{ $route.query.departureDate }}
+                <div v-if="flights.length > 0" class="flex flex-col gap-2">
+                    <flight-card v-for="flight in flights" :key="flight.id" :flight="flight" />
+                </div>
+                <div v-else>Рейсов не найдено</div>
+            </div>
+
+            <div v-if="$route.query.returnDate">
+                Рейсы {{ $route.query.destination }} - {{ $route.query.origin }}
+                <br />
+                на {{ $route.query.returnDate }}
+                <div v-if="returnFlights.length > 0" class="flex flex-col gap-2">
+                    <flight-card
+                        v-for="flight in returnFlights"
+                        :key="flight.id"
+                        :flight="flight"
+                    />
+                </div>
+                <div v-else>Рейсов не найдено</div>
+            </div>
         </div>
-        <div v-if="!loading && flights.length > 0" class="py-2 flex flex-col gap-2">
-            <flight-card v-for="flight in flights" :key="flight.id" :flight="flight" />
-        </div>
-        <div v-else-if="!loading && flights.length === 0">Рейсов не найдено</div>
         <div v-else>Загрузка...</div>
     </div>
 </template>
 
 <script>
-// import axios from 'axios';
+import axios from 'axios';
 
 import FlightCard from '@/components/Flights/FlightCard.vue';
 
@@ -22,48 +41,40 @@ export default {
     },
     data() {
         return {
-            flights: [
-                {
-                    id: 352,
-                    origin: 'Moscow',
-                    destination: 'Paris',
-                    date: '2023-01-14',
-                    time: '09:35:00',
-                    price: 6000,
-                },
-                {
-                    id: 353,
-                    origin: 'Moscow',
-                    destination: 'Paris',
-                    date: '2023-01-14',
-                    time: '18:40:00',
-                    price: 3060,
-                },
-            ],
+            flights: [],
+            returnFlights: [],
             loading: true,
         };
     },
     methods: {
-        async fetchFlights() {
+        async fetchFlights(oneDir) {
             try {
-                console.log(this.$route.query);
-                // await new Promise((res) => {
-                //     setTimeout(async () => {
-                //         const url = `http://localhost:8080/api/flights?origin=${
-                //             this.origin
-                //         }&destination=${this.destination}&date=${new Date(this.date).format(
-                //             'YYYY-MM-DD',
-                //         )}`;
-                //         console.log(url);
-                //         const response = await axios.get('http://localhost:8080/api/flights');
-                //         console.log(response);
-                //         const { data } = response;
-                //         console.log(data);
-                //         this.flights = data;
-                //         res();
-                //     }, 1000);
-                // });
-                console.log(this.flights);
+                await new Promise((res, rej) => {
+                    setTimeout(async () => {
+                        try {
+                            const query = this.$route.query;
+
+                            let url = `http://localhost:8080/api/flights?`;
+                            if (oneDir) {
+                                url += `origin=${query.origin}`;
+                                url += `&destination=${query.destination}`;
+                                url += `&date=${query.departureDate}`;
+                            } else {
+                                url += `origin=${query.destination}`;
+                                url += `&destination=${query.origin}`;
+                                url += `&date=${query.returnDate}`;
+                            }
+
+                            // console.log(url);
+                            const { data } = await axios.get(url);
+                            console.log(data);
+                            this.flights = data;
+                            res();
+                        } catch (e) {
+                            rej(e);
+                        }
+                    }, 1000);
+                });
             } catch (e) {
                 alert('Error', e);
             } finally {
@@ -72,7 +83,14 @@ export default {
         },
     },
     mounted() {
-        this.fetchFlights();
+        const query = this.$route.query;
+        if (!query || !query.origin || !query.destination || !query.departureDate) {
+            this.$router.push('/');
+        }
+        this.fetchFlights(true);
+        if (query.returnDate) {
+            this.fetchFlights(false);
+        }
     },
 };
 </script>

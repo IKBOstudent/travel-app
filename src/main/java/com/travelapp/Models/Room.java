@@ -5,20 +5,22 @@ import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@ToString
 @Entity
 @Table(name="rooms_table")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Room {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @ManyToOne
@@ -35,26 +37,12 @@ public class Room {
     @JsonIgnore
     private List<Reservation> reservationList = new ArrayList<>();
 
-    public Room() {
-    }
-
-    public Room(Long id, Hotel hotel, int beds) {
-        this.id = id;
-        this.hotel = hotel;
+    public Room(int beds, float nightPrice) {
         this.beds = beds;
+        this.nightPrice = nightPrice;
     }
 
     public void addReservation(Reservation reservation) {
         this.reservationList.add(reservation);
-    }
-
-    @Override
-    public String toString() {
-        return "Room{" +
-                "id=" + id +
-                ", hotel=" + hotel +
-                ", beds=" + beds +
-                ", reservationList=" + reservationList +
-                '}';
     }
 }

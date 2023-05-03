@@ -1,12 +1,12 @@
 <template>
     <div class="container mx-auto px-4 flex flex-col gap-4">
         <div>Результаты поиска: отели в городе {{ $route.query.city }}</div>
-        <div v-if="!loading && hotels.length > 0" class="py-2 flex flex-col gap-2">
+        <div v-if="!loading && rooms.length > 0" class="py-2 flex flex-col gap-2">
             <hotel-card
-                v-for="hotel in hotels"
-                :key="hotel.id"
-                :hotel="hotel"
-                :selected="selected && selected === hotel.id"
+                v-for="room in rooms"
+                :key="room.id"
+                :room="room"
+                :selected="selected && selected === room.id"
                 @select="setSelected"
             />
         </div>
@@ -26,36 +26,15 @@ export default {
     },
     data() {
         return {
-            hotels: [
-                {
-                    id: 352,
-                    city: 'Paris',
-                    name: 'First',
-                    stars: 3,
-                    checkInDate: '2023-01-14',
-                    checkOutDate: '2023-01-17',
-                    roomBeds: 2,
-                    price: 66000,
-                },
-                {
-                    id: 353,
-                    city: 'Paris',
-                    name: 'Second',
-                    stars: 4,
-                    checkInDate: '2023-01-14',
-                    checkOutDate: '2023-01-17',
-                    roomBeds: 2,
-                    price: 86000,
-                },
-            ],
+            rooms: [],
             loading: true,
             selected: null,
         };
     },
     methods: {
-        async fetchHotels() {
+        async fetchRooms() {
             try {
-                console.log(this.hotels);
+                console.log(this.rooms);
             } catch (e) {
                 alert('Error', e);
             } finally {
@@ -68,7 +47,7 @@ export default {
         },
     },
     mounted() {
-        this.fetchHotels();
+        this.fetchRooms();
     },
 };
 </script>
