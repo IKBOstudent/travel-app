@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -24,19 +23,31 @@ public class Flight {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
 
-    private LocalTime time;
+    @Column(name = "departure_time")
+    private LocalTime departureTime;
+
+    @Column(name = "arrival_time")
+    private LocalTime arrivalTime;
 
     private float price;
 
-    public Flight() {
-    }
+    public Flight() {}
 
-    public Flight(Long id, String origin, String destination, LocalDate date, LocalTime time, float price) {
+    public Flight(
+            Long id,
+            String origin,
+            String destination,
+            LocalDate date,
+            LocalTime departureTime,
+            LocalTime arrivalTime,
+            float price
+    ) {
         this.id = id;
         this.origin = origin;
         this.destination = destination;
         this.date = date;
-        this.time = time;
+        this.departureTime = departureTime;
+        this.arrivalTime = arrivalTime;
         this.price = price;
     }
 
@@ -47,7 +58,9 @@ public class Flight {
                 ", origin='" + origin + '\'' +
                 ", destination='" + destination + '\'' +
                 ", date=" + date +
-                ", time=" + time +
+                ", departureTime=" + departureTime +
+                ", arrivalTime=" + arrivalTime +
+                ", price=" + price +
                 '}';
     }
 }

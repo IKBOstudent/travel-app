@@ -1,5 +1,6 @@
 package com.travelapp.Models;
 
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -20,7 +21,8 @@ public class Reservation {
     private Long id;
 
     @ManyToOne
-    @JsonIgnore
+    @JoinColumn(name = "room_id")
+    @JsonIdentityReference(alwaysAsId = true)
     private Room room;
 
     @Column(name = "check_in_date")

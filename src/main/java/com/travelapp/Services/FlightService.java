@@ -2,6 +2,7 @@ package com.travelapp.Services;
 
 import com.travelapp.Models.Flight;
 import com.travelapp.Repositories.FlightRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,6 +10,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
+@Slf4j
 public class FlightService {
     private final FlightRepository flightRepository;
 
@@ -18,7 +20,9 @@ public class FlightService {
     }
 
     public List<Flight> getAllFlights() {
-        return flightRepository.findAll();
+        List<Flight> found = flightRepository.findAll();
+        log.info("get all flights success");
+        return found;
     }
 
     public List<Flight> getFlights(
@@ -26,11 +30,33 @@ public class FlightService {
             String destination,
             LocalDate date
     ) {
-        return flightRepository.find(origin, destination, date);
+        List<Flight> found = flightRepository.findByOriginDestinationDate(
+                origin, destination, date
+        );
+
+        log.info("get flights " + origin + " - " + destination + " " + date + " success");
+        return found;
     }
 
     public boolean createFlight(Flight flight) {
-        flightRepository.save(flight);
-        return true;
+        try {
+            flightRepository.save(flight);
+            log.info("created " + flight);
+            return true;
+        } catch (Exception e) {
+            log.error("error creating flight " + e);
+            return false;
+        }
+    }
+
+    public boolean deleteFlight(Long id) {
+        if (flightRepository.existsById(id)) {
+            log.info("deleted flight");
+            flightRepository.deleteById(id);
+            return true;
+        }
+
+        log.error("flight deleting failed: invalid id");
+        return false;
     }
 }

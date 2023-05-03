@@ -1,8 +1,9 @@
 package com.travelapp.Controllers;
 
+
 import com.travelapp.Models.Flight;
-import com.travelapp.Models.Hotel;
-import com.travelapp.Services.HotelService;
+import com.travelapp.Models.Reservation;
+import com.travelapp.Services.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -10,35 +11,42 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Field;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequestMapping("api/hotels")
+@RequestMapping("api/reservations")
 @CrossOrigin(origins = "http://localhost:8081")
-public class HotelController {
+public class ReservationController {
 
-    private final HotelService hotelService;
+    private final ReservationService reservationService;
 
     @Autowired
-    public HotelController(HotelService hotelService) {
-        this.hotelService = hotelService;
+    public ReservationController(ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
 
 //    @GetMapping()
-//    public ResponseEntity<List<Hotel>> getHotels(
+//    public ResponseEntity<List<Reservation>> getReservations(
 
 //    ) {
 //        return ResponseEntity
 //                .ok()
-//                .body(hotelService.getHotels(origin, destination, date));
+//                .body(reservationService.getReservations(origin, destination, date));
 //    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<Reservation>> getAllReservations() {
+
+        return ResponseEntity
+                .ok()
+                .body(reservationService.getAllReservations());
+    }
 
     @GetMapping("/metadata")
     public ResponseEntity<List<String>> getMetadata() {
         List<String> columns = new ArrayList<>();
-        Field[] fields = Hotel.class.getDeclaredFields();
+        Field[] fields = Reservation.class.getDeclaredFields();
 
         for (Field field : fields) {
             columns.add(field.getName());
@@ -49,19 +57,13 @@ public class HotelController {
                 .body(columns);
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<Hotel>> getAllHotels() {
-
-        return ResponseEntity
-                .ok()
-                .body(hotelService.getAllHotels());
-    }
-
     @PreAuthorize("isAuthenticated()")
     @PostMapping()
-    public ResponseEntity<Hotel> createHotel(@RequestBody Hotel hotel) {
-        if (hotelService.createHotel(hotel)) {
-            return ResponseEntity.ok().body(hotel);
+    public ResponseEntity<Reservation> createReservation(
+            @RequestParam(value = "room_id") Long roomId,
+            @RequestBody Reservation reservation) {
+        if (reservationService.createReservation(roomId, reservation)) {
+            return ResponseEntity.ok().body(reservation);
         } else {
             return ResponseEntity.badRequest().body(null);
         }
@@ -69,8 +71,8 @@ public class HotelController {
 
     @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteHotel(@PathVariable Long id) {
-        if (hotelService.deleteHotel(id)) {
+    public ResponseEntity<String> deleteReservation(@PathVariable Long id) {
+        if (reservationService.deleteReservation(id)) {
             return ResponseEntity.ok().body("success");
         } else {
             return ResponseEntity.badRequest().body("failed");

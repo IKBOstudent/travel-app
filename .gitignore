@@ -34,3 +34,6 @@ build/
 
 /src/main/vue-frontend/dist
 /src/main/vue-frontend/node_modules
+/src/main/vue-frontend/node
+
+/logs

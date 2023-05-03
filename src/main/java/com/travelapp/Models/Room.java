@@ -1,6 +1,9 @@
 package com.travelapp.Models;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,13 +15,15 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name="rooms_table")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @ManyToOne
-    @JsonIgnore
+    @JoinColumn(name = "hotel_id")
+    @JsonIdentityReference(alwaysAsId = true)
     private Hotel hotel;
 
     private int beds;
@@ -27,6 +32,7 @@ public class Room {
     private float nightPrice;
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Reservation> reservationList = new ArrayList<>();
 
     public Room() {
