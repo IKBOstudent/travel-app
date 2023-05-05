@@ -33,15 +33,20 @@ public class ReservationService {
     public boolean createReservation(Long roomId, Reservation reservation) {
         Optional<Room> roomOptional = roomRepository.findById(roomId);
         if (roomOptional.isPresent()) {
-            Room room = roomOptional.get();
-            room.addReservation(reservation);
-            reservation.setRoom(room);
+            List<Reservation> reservations = reservationRepository.findReservationCustom(
+                    roomId, reservation.getCheckInDate(), reservation.getCheckOutDate());
+            if (reservations.size() == 0) {
+                Room room = roomOptional.get();
+                reservation.setRoom(room);
 
-            roomRepository.save(room);
-//            reservationRepository.save(reservation);
+                reservationRepository.save(reservation);
 
-            log.info("created reservation " + reservation);
-            return true;
+                log.info("created reservation " + reservation);
+                return true;
+            } else {
+
+            }
+
         }
 
         log.error("error creating reservation");

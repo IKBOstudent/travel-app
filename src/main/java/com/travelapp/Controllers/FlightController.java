@@ -53,13 +53,11 @@ public class FlightController {
 
     @GetMapping("/all")
     public ResponseEntity<List<Flight>> getAllFlights() {
-
         return ResponseEntity
                 .ok()
                 .body(flightService.getAllFlights());
     }
 
-    @PreAuthorize("isAuthenticated()")
     @PostMapping()
     public ResponseEntity<Flight> createFlight(@RequestBody Flight flight) {
         if (flightService.createFlight(flight)) {
@@ -69,7 +67,6 @@ public class FlightController {
         }
     }
 
-    @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteFlight(@PathVariable Long id) {
         if (flightService.deleteFlight(id)) {

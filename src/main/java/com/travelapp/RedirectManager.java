@@ -10,7 +10,6 @@ import java.io.IOException;
 @Component
 public class RedirectManager implements Filter {
 
-
     @Override
     public void doFilter(ServletRequest request,
                          ServletResponse response,
@@ -19,12 +18,17 @@ public class RedirectManager implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
         String path = req.getRequestURI();
 
-        if (path.startsWith("/api") || path.contains(".")) {
-//            System.out.println("to server:" + path);
+
+        if (path.startsWith("/api") ||
+                path.matches(".*.html") ||
+                path.matches(".*.js") ||
+                path.matches(".*.css") ||
+                path.matches(".*.ico")
+        ) {
             chain.doFilter(request, response);
             return;
         }
-//        System.out.println("to front:" + path);
+        System.out.println(path);
         request.getRequestDispatcher("/").forward(request, response);
     }
 

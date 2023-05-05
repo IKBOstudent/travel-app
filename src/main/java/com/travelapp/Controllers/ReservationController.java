@@ -48,7 +48,6 @@ public class ReservationController {
                 .body(columns);
     }
 
-//    @PreAuthorize("isAuthenticated()")
     @PostMapping()
     public ResponseEntity<Reservation> createReservation(
             @RequestParam(value = "room_id") Long roomId,
@@ -60,7 +59,6 @@ public class ReservationController {
         }
     }
 
-    @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteReservation(@PathVariable Long id) {
         if (reservationService.deleteReservation(id)) {

@@ -45,13 +45,14 @@ public class RoomService {
         List<Room> roomsResult = new ArrayList<>();
         List<Room> rooms = roomRepository.findRoomCustom(city, guests);
         for (Room room : rooms) {
+            System.out.println("room" + room);
             List<Reservation> reservations = reservationRepository.findReservationCustom(room.getId(), checkInDate, checkOutDate);
             if (reservations.size() == 0) {
                 roomsResult.add(room);
             }
         }
 
-        log.info("get rooms in " + city + " for " + guests + " guests success");
+        log.info("get rooms in city " + city + " for " + guests + " guests success");
         return roomsResult;
     }
 
@@ -59,11 +60,9 @@ public class RoomService {
         Optional<Hotel> hotelOptional = hotelRepository.findById(hotelId);
         if (hotelOptional.isPresent()) {
             Hotel hotel = hotelOptional.get();
-            hotel.addRoom(room);
             room.setHotel(hotel);
 
-            hotelRepository.save(hotel);
-//            roomRepository.save(room);
+            roomRepository.save(room);
 
             log.info("created room " + room);
             return true;

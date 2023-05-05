@@ -21,23 +21,21 @@ class RoomServiceTest {
     @Autowired
     private HotelRepository hotelRepository;
 
-    @Test
-    public void whenAddHotel_roomShouldBeAdded() {
-        Optional<Hotel> hotelOptional = hotelRepository.findById(1853L);
-        if (hotelOptional.isPresent()) {
-            System.out.println("present");
-            var hotel = hotelOptional.get();
-            var prev = roomRepository.count();
-            hotel.addRoom(new Room(2, 1220));
-            hotel.addRoom(new Room(3, 1500));
-            hotelRepository.save(hotel);
-
-            System.out.println(hotel.getRoomList());
-            Assertions.assertEquals(prev+2, roomRepository.count());
-
-        }
-
-
-    }
+//    @Test
+//    public void whenAddHotel_roomShouldBeAdded() {
+//        Optional<Hotel> hotelOptional = hotelRepository.findById(1853L);
+//        if (hotelOptional.isPresent()) {
+//            System.out.println("present");
+//            var hotel = hotelOptional.get();
+//            var prev = roomRepository.count();
+//            hotel.addRoom(new Room(2, 1220));
+//            hotel.addRoom(new Room(3, 1500));
+//            hotelRepository.save(hotel);
+//
+//            System.out.println(hotel.getRoomList());
+//            Assertions.assertEquals(prev+2, roomRepository.count());
+//
+//        }
+//    }
 
 }

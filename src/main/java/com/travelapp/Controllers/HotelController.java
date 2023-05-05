@@ -49,7 +49,6 @@ public class HotelController {
                 .body(hotelService.getAllHotels());
     }
 
-    @PreAuthorize("isAuthenticated()")
     @PostMapping()
     public ResponseEntity<Hotel> createHotel(@RequestBody Hotel hotel) {
         if (hotelService.createHotel(hotel)) {
@@ -59,7 +58,6 @@ public class HotelController {
         }
     }
 
-    @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteHotel(@PathVariable Long id) {
         if (hotelService.deleteHotel(id)) {

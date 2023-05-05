@@ -26,6 +26,7 @@ public class RoomController {
         this.roomService = roomService;
     }
 
+    @PreAuthorize("permitAll()")
     @GetMapping()
     public ResponseEntity<List<Room>> getRoom(
             @RequestParam(value = "city") String city,
@@ -60,7 +61,6 @@ public class RoomController {
                 .body(roomService.getAllRooms());
     }
 
-    @PreAuthorize("isAuthenticated()")
     @PostMapping()
     public ResponseEntity<Room> createRoom(
             @RequestParam(value = "hotel_id") Long hotelId,
@@ -72,7 +72,6 @@ public class RoomController {
         }
     }
 
-    @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteRoom(@PathVariable Long id) {
         if (roomService.deleteRoom(id)) {

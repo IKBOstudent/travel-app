@@ -15,7 +15,6 @@ import java.util.List;
 @ToString
 @Entity
 @Table(name="hotels_table")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Hotel {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -27,17 +26,9 @@ public class Hotel {
 
     private int stars;
 
-    @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL)
-    @JsonIgnore
-    private List<Room> roomList = new ArrayList<>();
-
     public Hotel(String name, String city, int stars) {
         this.name = name;
         this.city = city;
         this.stars = stars;
-    }
-
-    public void addRoom(Room room) {
-        this.roomList.add(room);
     }
 }

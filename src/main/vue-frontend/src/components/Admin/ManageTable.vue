@@ -1,7 +1,14 @@
 <template>
-    <div>
-        <div class="p-4">Таблица: {{ this.tableName }}_table</div>
-        <div v-if="isTableLoading">Загрузка таблицы...</div>
+    <div class="p-4">
+        <div class="py-4">Таблица: {{ this.tableName }}_table</div>
+        <div v-if="this.tableStatus === 0">Загрузка таблицы...</div>
+        <div v-else-if="this.tableStatus === 2">
+            Ошибка загрузки данных :(
+            <button class="p-2 w-full bg-slate-300" @click="() => fetchTable(this.tableName)">
+                Обновить страницу
+            </button>
+        </div>
+
         <div v-else>
             <form class="p-6 flex flex-col w-60 gap-1" @submit.prevent="handleAddRow">
                 <div>Добавление новой сущности</div>
@@ -61,6 +68,8 @@
 import axios from 'axios';
 
 const tableNames = ['flights', 'hotels', 'rooms', 'reservations'];
+const tableStatuses = { loading: 0, ok: 1, error: 2 };
+console.log(tableStatuses);
 
 export default {
     props: {
@@ -72,27 +81,37 @@ export default {
         return {
             tableHead: null,
             table: [],
-            isTableLoading: true,
+            tableStatus: tableStatuses.loading,
             newRowData: {},
+            controller: null,
         };
     },
     methods: {
-        async fetchTableHead(name) {
-            const { data } = await axios.get(`http://localhost:8080/api/${name}/metadata`);
-            this.tableHead = data;
-        },
-
         async fetchTable(name) {
+            this.tableStatus = tableStatuses.loading;
+            if (this.controller) {
+                this.controller.abort();
+            }
             try {
-                this.isTableLoading = true;
                 await new Promise((res, rej) => {
                     setTimeout(async () => {
                         try {
-                            const { data } = await axios.get(
-                                `http://localhost:8080/api/${name}/all`,
+                            this.controller = new AbortController();
+                            let response = await axios.get(
+                                `http://localhost:8080/api/${name}/metadata`,
+                                {
+                                    signal: this.controller.signal,
+                                },
                             );
-                            console.log(data);
-                            this.table = data;
+                            this.tableHead = response.data;
+
+                            response = await axios.get(`http://localhost:8080/api/${name}/all`, {
+                                signal: this.controller.signal,
+                            });
+                            this.controller = null;
+                            this.table = response.data;
+
+                            this.tableStatus = tableStatuses.ok;
                             res();
                         } catch (e) {
                             rej(e);
@@ -100,15 +119,18 @@ export default {
                     }, 1000);
                 });
             } catch (e) {
-                alert('Error', e);
-            } finally {
-                this.isTableLoading = false;
+                if (e.name !== 'CanceledError') {
+                    console.error('ERROR', e);
+                    this.tableStatus = tableStatuses.error;
+                } else {
+                    this.tableStatus = tableStatuses.ok;
+                }
             }
         },
 
         async handleAddRow() {
             try {
-                this.isTableLoading = true;
+                this.tableStatus = tableStatuses.loading;
                 await new Promise((res, rej) => {
                     setTimeout(async () => {
                         try {
@@ -121,10 +143,9 @@ export default {
                                 url += `?room_id=${rowData['room']}`;
                                 delete rowData['room'];
                             }
-                            console.log(url, rowData);
                             const { data } = await axios.post(url, rowData);
-                            console.log(data);
                             this.table.push(data);
+                            this.tableStatus = tableStatuses.ok;
                             res();
                         } catch (e) {
                             rej(e);
@@ -132,24 +153,21 @@ export default {
                     }, 1000);
                 });
             } catch (e) {
-                alert('Error', e);
-            } finally {
-                this.isTableLoading = false;
-                console.log('update');
+                this.tableStatus = tableStatuses.error;
             }
         },
 
         async deleteRow(id) {
             try {
-                this.isTableLoading = true;
+                this.tableStatus = tableStatuses.loading;
                 await new Promise((res, rej) => {
                     setTimeout(async () => {
                         try {
-                            const { data } = await axios.delete(
-                                `http://localhost:8080/api/${this.tableName}/${id}`,
-                            );
-                            console.log(data);
+                            await axios.delete(`http://localhost:8080/api/${this.tableName}/${id}`);
+
                             this.table = this.table.filter((row) => row.id !== id);
+
+                            this.tableStatus = tableStatuses.ok;
                             res();
                         } catch (e) {
                             rej(e);
@@ -157,10 +175,7 @@ export default {
                     }, 1000);
                 });
             } catch (e) {
-                alert('Error', e);
-            } finally {
-                this.isTableLoading = false;
-                console.log('update');
+                this.tableStatus = tableStatuses.error;
             }
         },
     },
@@ -168,7 +183,6 @@ export default {
     watch: {
         $props: {
             handler() {
-                this.fetchTableHead(this.tableName);
                 this.fetchTable(this.tableName);
             },
             deep: true,

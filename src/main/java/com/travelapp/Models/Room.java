@@ -17,7 +17,8 @@ import java.util.List;
 @ToString
 @Entity
 @Table(name="rooms_table")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -25,7 +26,6 @@ public class Room {
 
     @ManyToOne
     @JoinColumn(name = "hotel_id")
-    @JsonIdentityReference(alwaysAsId = true)
     private Hotel hotel;
 
     private int beds;
@@ -33,16 +33,8 @@ public class Room {
     @Column(name = "night_price")
     private float nightPrice;
 
-    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
-    @JsonIgnore
-    private List<Reservation> reservationList = new ArrayList<>();
-
     public Room(int beds, float nightPrice) {
         this.beds = beds;
         this.nightPrice = nightPrice;
-    }
-
-    public void addReservation(Reservation reservation) {
-        this.reservationList.add(reservation);
     }
 }
