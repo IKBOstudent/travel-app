@@ -1,17 +1,15 @@
 <template>
-    <div>
-        <div v-if="!this.isAuthenticated">
-            <login-form @auth="setAuthenticated" />
-        </div>
-        <div v-else>
-            <admin-home />
-        </div>
+    <div v-if="!this.isAuthenticated">
+        <login-form @auth="setAuthenticated" />
+    </div>
+    <div v-else>
+        <admin-home />
     </div>
 </template>
 
 <script>
-import AdminHome from '@/components/Admin/AdminHome.vue';
-import LoginForm from '@/components/Admin/LoginForm.vue';
+import AdminHome from "@/components/Admin/AdminHome.vue";
+import LoginForm from "@/components/Admin/LoginForm.vue";
 
 export default {
     components: {

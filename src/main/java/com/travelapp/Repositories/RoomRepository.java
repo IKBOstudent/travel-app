@@ -11,4 +11,6 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
     @Query("select r from Room r " +
             "where r.hotel.city = :city and r.beds >= :guests ")
     List<Room> findRoomCustom(String city, int guests);
+
+    Room findFirstByHotel_Id(Long hotelId);
 }

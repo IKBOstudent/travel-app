@@ -1,9 +1,6 @@
 package com.travelapp.Models;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -35,6 +32,10 @@ public class Reservation {
     @Column(name = "check_out_date")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate checkOutDate;
+
+    @JsonInclude()
+    @Transient
+    private long nights;
 
     public Reservation(Room room, LocalDate checkInDate, LocalDate checkOutDate) {
         this.room = room;

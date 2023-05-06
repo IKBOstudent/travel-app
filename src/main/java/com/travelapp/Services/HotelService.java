@@ -48,6 +48,11 @@ public class HotelService {
 
     public boolean deleteHotel(Long id) {
         if (hotelRepository.existsById(id)) {
+            System.out.println(roomRepository.findFirstByHotel_Id(id));
+            if (roomRepository.findFirstByHotel_Id(id) != null) {
+                log.error("cant delete hotel as rooms still exist");
+                return false;
+            }
             log.info("deleted hotel");
             hotelRepository.deleteById(id);
             return true;

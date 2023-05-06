@@ -74,6 +74,10 @@ public class RoomService {
 
     public boolean deleteRoom(Long id) {
         if (roomRepository.existsById(id)) {
+            if (reservationRepository.findFirstByRoom_Id(id) != null) {
+                log.error("cant delete room as reservations still exist");
+                return false;
+            }
             log.info("deleted room");
             roomRepository.deleteById(id);
             return true;

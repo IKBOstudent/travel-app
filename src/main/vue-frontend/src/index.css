@@ -1,3 +1,25 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+    /* .input {
+        @apply;
+    }
+
+    .btn {
+        @apply;
+    }
+
+    .btn-black {
+        @apply;
+    }
+
+    .btn-disabled {
+        @apply;
+    }
+
+    .btn-ghost {
+        @apply;
+    } */
+}
