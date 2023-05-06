@@ -1,10 +1,18 @@
 <template>
     <div class="flex flex-col">
-        <div class="text-neutral-900 font-semibold text-2xl">Таблица: {{ this.tableName }}_table</div>
+        <div class="text-neutral-900 font-semibold text-2xl">
+            Таблица: {{ this.tableName }}_table
+        </div>
 
         <div>
-            <form class="my-8 flex flex-col border rounded border-neutral-200 bg-white" @submit.prevent="handleAddRow">
-                <div class="p-6 rounded-t" :class="{ 'bg-neutral-100 text-neutral-400': this.tableStatus !== 1 }">
+            <form
+                class="my-8 flex flex-col border rounded border-neutral-200 bg-white"
+                @submit.prevent="handleAddRow"
+            >
+                <div
+                    class="p-6 rounded-t"
+                    :class="{ 'bg-neutral-50 text-neutral-400': this.tableStatus !== 1 }"
+                >
                     <span class="text-md">Добавление новой сущности</span>
                     <div v-if="this.tableStatus === 0" class="mt-2">Загрузка данных...</div>
                     <div
@@ -23,32 +31,20 @@
                             autocapitalize="none"
                             autocomplete="off"
                             autocorrect="off"
-                            class="border py-2 px-3 w-fit rounded leading-4 text-sm focus-visible:border-neutral-700 outline-none"
+                            class="text-sm input"
                             :placeholder="name"
                             v-model="newRowData[name]"
                         />
                     </div>
                 </div>
                 <div
-                    class="px-6 py-3 flex flex-row items-center justify-between w-full border-t border-neutral-200 bg-neutral-100 rounded-b"
+                    class="px-6 py-3 flex flex-row items-center justify-between w-full border-t border-neutral-200 bg-neutral-50 rounded-b"
                 >
-                    <p v-if="this.tableStatus === 2" class="text-red-600 flex flex-row items-center">
-                        <svg
-                            data-testid="geist-icon"
-                            fill="none"
-                            shape-rendering="geometricPrecision"
-                            stroke="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="1.5"
-                            viewBox="0 0 24 24"
-                            width="24"
-                            class="mr-2 h-5"
-                        >
-                            <circle cx="12" cy="12" r="10" fill="var(--geist-fill)" />
-                            <path d="M12 8v4" stroke="var(--geist-stroke)" />
-                            <path d="M12 16h.01" stroke="var(--geist-stroke)" />
-                        </svg>
+                    <p
+                        v-if="this.tableStatus === 2"
+                        class="text-red-600 flex flex-row items-center"
+                    >
+                        <error-svg class="mr-2 h-5" />
                         Произошла ошибка :(
                     </p>
                     <p
@@ -61,19 +57,18 @@
                     >
                         Добавить элемент в таблицу
                     </p>
-                    <button
-                        type="submit"
-                        class="px-3 py-1 bg-neutral-900 border border-neutral-900 rounded text-white font-semibold hover:text-neutral-900 hover:bg-white disabled:text-neutral-400 disabled:bg-neutral-100 disabled:border-neutral-300"
-                        :disabled="this.tableStatus !== 1"
-                    >
+                    <button type="submit" class="btn-black" :disabled="this.tableStatus !== 1">
                         Добавить
                     </button>
                 </div>
             </form>
-            <div v-if="this.tableStatus === 0" class="">Загрузка таблицы...</div>
-            <table v-else-if="this.tableStatus === 1" class="w-full border-spacing-0 border-separate">
+            <div v-if="this.tableStatus === 0" class="px-4">Загрузка таблицы...</div>
+            <table
+                v-else-if="this.tableStatus === 1"
+                class="w-full border-spacing-0 border-separate"
+            >
                 <thead>
-                    <tr class="h-10 bg-neutral-100">
+                    <tr class="h-10 bg-neutral-50">
                         <th
                             v-for="(name, i) in [...tableHead, '']"
                             :key="name"
@@ -89,18 +84,18 @@
                 </thead>
 
                 <tbody v-if="table.length > 0" class="">
-                    <tr v-for="(row, i) in table" :key="row.id" class="h-12 whitespace-nowrap">
+                    <tr v-for="row in table" :key="row.id" class="h-12 whitespace-nowrap">
                         <td
-                            class="px-4 py-2 text-sm border-neutral-200 text-neutral-700"
+                            class="border-l border-b px-4 py-2 text-sm border-neutral-200 text-neutral-700"
                             v-for="(cell, name) in row"
                             :key="name"
-                            :class="{ 'border-b': i < table.length - 1 }"
                         >
-                            <span>{{ String(cell).length > 0 ? (name === "hotel" ? cell.id : cell) : "–" }}</span>
+                            <span>{{
+                                String(cell).length > 0 ? (name === 'hotel' ? cell.id : cell) : '–'
+                            }}</span>
                         </td>
                         <td
-                            class="py-2 px-6 text-sm border-neutral-200 text-red-600 hover:bg-red-50 cursor-pointer"
-                            :class="{ 'border-b': i < table.length - 1 }"
+                            class="border-x border-b py-2 px-6 text-sm border-neutral-200 text-red-600 hover:bg-red-50 cursor-pointer"
                             @click="() => deleteRow(row.id)"
                         >
                             Удалить
@@ -116,7 +111,7 @@
             </div>
             <div v-else-if="this.tableStatus === 2" class="flex justify-center w-full">
                 <button
-                    class="px-4 py-2 font-semibold border border-neutral-200 text-neutral-700 rounded hover:bg-neutral-100"
+                    class="px-4 py-2 font-semibold border border-neutral-200 text-neutral-700 rounded hover:bg-neutral-50"
                     @click="() => fetchTable(this.tableName)"
                 >
                     Обновить таблицу
@@ -127,12 +122,16 @@
 </template>
 
 <script>
-import axios from "axios";
+import axios from 'axios';
+import ErrorSvg from '../svgs/ErrorSvg.vue';
 
-const tableNames = ["flights", "hotels", "rooms", "reservations"];
+const tableNames = ['flights', 'hotels', 'rooms', 'reservations'];
 const tableStatuses = { loading: 0, ok: 1, error: 2 };
 
 export default {
+    components: {
+        ErrorSvg,
+    },
     props: {
         tableName: {
             require: true,
@@ -158,9 +157,12 @@ export default {
                     setTimeout(async () => {
                         try {
                             this.controller = new AbortController();
-                            let response = await axios.get(`http://localhost:8080/api/${name}/metadata`, {
-                                signal: this.controller.signal,
-                            });
+                            let response = await axios.get(
+                                `http://localhost:8080/api/${name}/metadata`,
+                                {
+                                    signal: this.controller.signal,
+                                },
+                            );
                             this.tableHead = response.data;
 
                             response = await axios.get(`http://localhost:8080/api/${name}/all`, {
@@ -177,8 +179,8 @@ export default {
                     }, 0);
                 });
             } catch (e) {
-                if (e.name !== "CanceledError") {
-                    console.error("ERROR", e);
+                if (e.name !== 'CanceledError') {
+                    console.error('ERROR', e);
                     this.tableStatus = tableStatuses.error;
                 } else {
                     this.tableStatus = tableStatuses.ok;
@@ -195,15 +197,17 @@ export default {
                             const rowData = { ...this.newRowData };
                             let url = `http://localhost:8080/api/${this.tableName}`;
                             if (this.tableName === tableNames[2]) {
-                                url += `?hotel_id=${rowData["hotel"]}`;
-                                delete rowData["hotel"];
+                                url += `?hotel_id=${rowData['hotel']}`;
+                                delete rowData['hotel'];
                             } else if (this.tableName === tableNames[3]) {
-                                url += `?room_id=${rowData["room"]}`;
-                                delete rowData["room"];
+                                url += `?room_id=${rowData['room']}`;
+                                delete rowData['room'];
                             }
                             const { data } = await axios.post(url, rowData);
 
-                            let response = await axios.get(`http://localhost:8080/api/${this.tableName}/metadata`);
+                            let response = await axios.get(
+                                `http://localhost:8080/api/${this.tableName}/metadata`,
+                            );
                             this.tableHead = response.data;
 
                             this.table.push(data);
@@ -227,7 +231,7 @@ export default {
                         try {
                             await axios.delete(`http://localhost:8080/api/${this.tableName}/${id}`);
 
-                            this.table = this.table.filter(row => row.id !== id);
+                            this.table = this.table.filter((row) => row.id !== id);
 
                             this.tableStatus = tableStatuses.ok;
                             res();

@@ -4,28 +4,9 @@
             <div class="flex flex-col p-8 h-full">
                 <div class="flex justify-between items-center pt-4 px-4">
                     <h1 class="text-xl font-semibold">Admin</h1>
-                    <button
-                        class="inline-flex items-center py-1 px-3 bg-neutral-100 border border-neutral-200 text-neutral-500 rounded hover:text-neutral-900"
-                        @click="handleLogout"
-                    >
+                    <button class="btn-gray" @click="handleLogout">
                         Выйти
-                        <svg
-                            class="ml-1 h-5"
-                            data-testid="geist-icon"
-                            fill="none"
-                            height="24"
-                            shape-rendering="geometricPrecision"
-                            stroke="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="1.5"
-                            viewBox="0 0 24 24"
-                            width="24"
-                        >
-                            <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
-                            <path d="M16 17l5-5-5-5" />
-                            <path d="M21 12H9" />
-                        </svg>
+                        <logout-svg class="ml-1 h-5" />
                     </button>
                 </div>
                 <ul class="pt-8 pr-8 flex flex-col list-none text-md font-semibold">
@@ -50,14 +31,16 @@
 </template>
 
 <script>
-import ManageTable from "@/components/Admin/ManageTable.vue";
-import axios from "axios";
+import ManageTable from '@/components/Admin/ManageTable.vue';
+import LogoutSvg from '../svgs/LogoutSvg.vue';
+import axios from 'axios';
 
-const tableNames = ["flights", "hotels", "rooms", "reservations"];
+const tableNames = ['flights', 'hotels', 'rooms', 'reservations'];
 
 export default {
     components: {
         ManageTable,
+        LogoutSvg,
     },
     data() {
         return {
@@ -72,13 +55,13 @@ export default {
 
         async handleLogout() {
             try {
-                this.$router.push("/");
+                this.$router.push('/');
                 await new Promise((res, rej) => {
                     setTimeout(async () => {
                         try {
-                            this.$store.commit("setInterceptor", null);
-                            await axios.post("http://localhost:8080/api/admin/logout");
-                            console.log("logout success");
+                            this.$store.commit('setInterceptor', null);
+                            await axios.post('http://localhost:8080/api/admin/logout');
+                            console.log('logout success');
                             res();
                         } catch (e) {
                             rej(e);
@@ -86,7 +69,7 @@ export default {
                     }, 1000);
                 });
             } catch (e) {
-                console.warn("server error");
+                console.warn('server error');
             }
         },
     },

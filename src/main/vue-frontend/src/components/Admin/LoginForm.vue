@@ -1,44 +1,62 @@
 <template>
-    <div class="w-full flex justify-center">
-        <form @submit.prevent="handleSubmit" class="container max-w-xs flex flex-col gap-2">
+    <div class="w-full flex justify-center mt-8">
+        <form
+            @submit.prevent="handleSubmit"
+            class="container max-w-xs flex flex-col items-center gap-3"
+        >
+            <h1 class="p-2 font-semibold text-2xl text-neutral-900">Администратор</h1>
             <input
                 :value="username"
-                class="border py-2 px-4 rounded-none w-full"
-                :class="{ 'border-red-600': invalid }"
                 type="text"
                 placeholder="username"
+                class="w-full text-lg input"
+                :class="{ 'input-invalid': invalid }"
                 @input="setUsername"
             />
 
             <input
                 :value="password"
-                class="border py-2 px-4 rounded-none w-full"
-                :class="{ 'border-red-600': invalid }"
                 type="password"
                 placeholder="password"
+                class="w-full text-lg input"
+                :class="{ 'input-invalid': invalid }"
                 @input="setPassword"
             />
-            <div v-if="invalid" class="py-1 rounded-none w-full text-red-600">
-                Invalid credentials
+            <div v-if="invalid" class="inline-flex items-center w-full text-red-600">
+                <strong class="inline-flex mr-1"><error-svg class="mr-2 h-5" />Ошибка: </strong>
+                Произошла ошибка
             </div>
-            <button class="py-2 px-4 bg-gray-300 active:scale-95" type="submit">Login</button>
+            <button
+                class="w-full h-12 font-semibold text-lg btn-black"
+                :disabled="loading"
+                type="submit"
+            >
+                Войти
+            </button>
         </form>
     </div>
 </template>
 <script>
 import axios from 'axios';
 
+import ErrorSvg from '../svgs/ErrorSvg.vue';
+
 export default {
+    components: {
+        ErrorSvg,
+    },
     data() {
         return {
             username: '',
             password: '',
-            invalid: false,
+            invalid: true,
+            loading: false,
         };
     },
     methods: {
         async handleSubmit() {
             try {
+                this.loading = true;
                 await new Promise((res, rej) => {
                     setTimeout(async () => {
                         try {
@@ -63,14 +81,18 @@ export default {
                 });
             } catch (e) {
                 this.invalid = true;
+            } finally {
+                this.loading = false;
             }
         },
 
         setUsername(event) {
+            this.invalid = false;
             this.username = event.target.value;
         },
 
         setPassword(event) {
+            this.invalid = false;
             this.password = event.target.value;
         },
     },
