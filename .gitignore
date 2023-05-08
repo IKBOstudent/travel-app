@@ -32,8 +32,8 @@ build/
 ### VS Code ###
 .vscode/
 
-/src/main/vue-frontend/dist
-/src/main/vue-frontend/node_modules
-/src/main/vue-frontend/node
+/vue-frontend/dist
+/vue-frontend/node_modules
+/vue-frontend/node
 
 /logs
