@@ -2,10 +2,8 @@ package com.travelapp.Controllers;
 
 import com.travelapp.Models.Flight;
 import com.travelapp.Services.FlightService;
-import jakarta.persistence.Column;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -61,6 +59,16 @@ public class FlightController {
     @PostMapping()
     public ResponseEntity<Flight> createFlight(@RequestBody Flight flight) {
         if (flightService.createFlight(flight)) {
+            return ResponseEntity.ok().body(flight);
+        } else {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @PostMapping("/book")
+    public ResponseEntity<Flight> bookFlight(@RequestParam(value = "flight_id") Long flightId) {
+        Flight flight = flightService.getFlightById(flightId);
+        if (flight != null) {
             return ResponseEntity.ok().body(flight);
         } else {
             return ResponseEntity.badRequest().body(null);

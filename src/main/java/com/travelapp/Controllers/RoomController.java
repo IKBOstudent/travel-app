@@ -1,11 +1,9 @@
 package com.travelapp.Controllers;
 
-import com.travelapp.Models.Flight;
 import com.travelapp.Models.Room;
 import com.travelapp.Services.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +24,6 @@ public class RoomController {
         this.roomService = roomService;
     }
 
-    @PreAuthorize("permitAll()")
     @GetMapping()
     public ResponseEntity<List<Room>> getRoom(
             @RequestParam(value = "city") String city,
@@ -64,7 +61,8 @@ public class RoomController {
     @PostMapping()
     public ResponseEntity<Room> createRoom(
             @RequestParam(value = "hotel_id") Long hotelId,
-            @RequestBody Room room) {
+            @RequestBody Room room
+    ) {
         if (roomService.createRoom(hotelId, room)) {
             return ResponseEntity.ok().body(room);
         } else {

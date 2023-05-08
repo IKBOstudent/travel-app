@@ -4,11 +4,11 @@
 
 @layer components {
     .input {
-        @apply appearance-none border border-neutral-100 py-2 px-3 w-fit rounded leading-4  focus-visible:outline-none  focus-visible:border-transparent focus-visible:ring-2 focus-visible:ring-neutral-700;
+        @apply outline-none transition-colors select-none appearance-none border-2 placeholder:text-neutral-500 border-neutral-200 py-2 px-3 w-fit rounded  focus-visible:border-neutral-700 hover:border-neutral-400;
     }
 
     .input-invalid {
-        @apply text-red-600 border-red-600 focus-visible:ring-red-600 placeholder:text-red-300;
+        @apply text-red-600 border-red-300 focus-visible:border-red-600 placeholder:text-red-300;
     }
 
     /* .btn {

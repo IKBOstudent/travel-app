@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -21,8 +23,14 @@ public class FlightService {
 
     public List<Flight> getAllFlights() {
         List<Flight> found = flightRepository.findAll();
+        found.sort(Comparator.comparing(Flight::getOrigin));
         log.info("get all flights success");
         return found;
+    }
+
+    public Flight getFlightById(Long flightId) {
+        Optional<Flight> flightOptional = flightRepository.findById(flightId);
+        return flightOptional.orElse(null);
     }
 
     public List<Flight> getFlights(
@@ -33,7 +41,7 @@ public class FlightService {
         List<Flight> found = flightRepository.findByOriginAndDestinationAndDate(
                 origin, destination, date
         );
-
+        found.sort(Comparator.comparing(Flight::getDepartureTime));
         log.info("get flights " + origin + " - " + destination + " " + date + " success");
         return found;
     }

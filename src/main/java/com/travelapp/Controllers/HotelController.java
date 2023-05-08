@@ -1,17 +1,13 @@
 package com.travelapp.Controllers;
 
-import com.travelapp.Models.Flight;
 import com.travelapp.Models.Hotel;
-import com.travelapp.Models.Room;
 import com.travelapp.Services.HotelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Field;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 

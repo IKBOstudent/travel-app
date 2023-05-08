@@ -1,6 +1,5 @@
 package com.travelapp.Services;
 
-import com.travelapp.Models.Hotel;
 import com.travelapp.Models.Reservation;
 import com.travelapp.Models.Room;
 import com.travelapp.Repositories.ReservationRepository;
@@ -9,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,16 +26,24 @@ public class ReservationService {
 
     public List<Reservation> getAllReservations() {
         List<Reservation> found = reservationRepository.findAll();
+        found.sort(Comparator.comparingLong(item -> item.getRoom().getId()));
         log.info("get all reservations success");
         return found;
     }
 
     public boolean createReservation(Long roomId, Reservation reservation) {
+        if (reservation.getCheckInDate().isEqual(reservation.getCheckOutDate()) ||
+                reservation.getCheckInDate().isAfter(reservation.getCheckOutDate())
+        ) {
+            log.error("invalid time period");
+            return false;
+        }
+
         Optional<Room> roomOptional = roomRepository.findById(roomId);
         if (roomOptional.isPresent()) {
-            List<Reservation> reservations = reservationRepository.findReservationCustom(
+            Reservation sameDateReservation = reservationRepository.findFirstReservationCustom(
                     roomId, reservation.getCheckInDate(), reservation.getCheckOutDate());
-            if (reservations.size() == 0) {
+            if (sameDateReservation == null) {
                 Room room = roomOptional.get();
                 reservation.setRoom(room);
 
@@ -43,10 +51,7 @@ public class ReservationService {
 
                 log.info("created reservation " + reservation);
                 return true;
-            } else {
-
             }
-
         }
 
         log.error("error creating reservation");

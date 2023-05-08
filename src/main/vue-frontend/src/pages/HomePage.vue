@@ -1,31 +1,30 @@
 <template>
-    <div class="container mx-auto px-4">
-        <div class="flex flex-row">
-            <div
-                class="py-2 px-4 cursor-pointer"
-                :class="{ 'bg-slate-300': active === 1 }"
-                @click="() => setActive(1)"
-            >
-                Авиабилеты
+    <div class="max-w-5xl min-h-screen px-6 mx-auto">
+        <nav class="pt-24">
+            <h1 class="text-3xl font-bold text-center">Путешествуйте по всему миру</h1>
+            <p class="m-3 text-lg text-center">Огромный выбор стран и городов</p>
+            <div class="mt-8 flex flex-row border border-neutral-200 w-fit rounded">
+                <div
+                    v-for="(val, i) in ['Авиабилеты', 'Отели']"
+                    :key="val"
+                    class="flex justify-center m-1 py-2 cursor-pointer w-[120px] rounded"
+                    :class="{ 'bg-neutral-200': active === i }"
+                    @click="() => setActive(i)"
+                >
+                    {{ val }}
+                </div>
             </div>
-            <div
-                class="py-2 px-4 cursor-pointer"
-                :class="{ 'bg-slate-300': active === 2 }"
-                @click="() => setActive(2)"
-            >
-                Отели
+            <div class="mt-2 rounded w-full bg-neutral-50 border border-neutral-200 py-2 px-2 box-border">
+                <flight-form v-if="active === 0" :column="false" />
+                <hotel-form v-else :column="false" />
             </div>
-        </div>
-        <div class="p-4 pt-4 bg-slate-300">
-            <flight-form v-if="active === 1" />
-            <hotel-form v-else />
-        </div>
+        </nav>
     </div>
 </template>
 
 <script>
-import FlightForm from '@/components/Flights/FlightForm.vue';
-import HotelForm from '@/components/Hotels/HotelForm.vue';
+import FlightForm from "@/components/Flights/FlightForm.vue";
+import HotelForm from "@/components/Hotels/HotelForm.vue";
 
 export default {
     components: {
@@ -34,7 +33,7 @@ export default {
     },
     data() {
         return {
-            active: 1,
+            active: 0,
         };
     },
     methods: {

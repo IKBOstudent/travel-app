@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +32,7 @@ public class RoomService {
 
     public List<Room> getAllRooms() {
         List<Room> found = roomRepository.findAll();
+        found.sort(Comparator.comparingLong(item -> item.getHotel().getId()));
         log.info("get all rooms success");
         return found;
     }
@@ -45,14 +47,15 @@ public class RoomService {
         List<Room> roomsResult = new ArrayList<>();
         List<Room> rooms = roomRepository.findRoomCustom(city, guests);
         for (Room room : rooms) {
-            System.out.println("room" + room);
-            List<Reservation> reservations = reservationRepository.findReservationCustom(room.getId(), checkInDate, checkOutDate);
-            if (reservations.size() == 0) {
+            System.out.println(room);
+            Reservation sameDateReservation = reservationRepository.findFirstReservationCustom(room.getId(), checkInDate, checkOutDate);
+            if (sameDateReservation == null) {
+                System.out.println("berem");
                 roomsResult.add(room);
             }
         }
 
-        log.info("get rooms in city " + city + " for " + guests + " guests success");
+        log.info("get " + roomsResult.size() + " rooms in city " + city + " for " + guests + " guests success");
         return roomsResult;
     }
 

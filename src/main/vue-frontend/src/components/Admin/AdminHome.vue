@@ -31,11 +31,11 @@
 </template>
 
 <script>
-import ManageTable from '@/components/Admin/ManageTable.vue';
-import LogoutSvg from '../svgs/LogoutSvg.vue';
-import axios from 'axios';
+import ManageTable from "@/components/Admin/ManageTable.vue";
+import LogoutSvg from "../svgs/LogoutSvg.vue";
+import axios from "axios";
 
-const tableNames = ['flights', 'hotels', 'rooms', 'reservations'];
+const tableNames = ["flights", "hotels", "rooms", "reservations"];
 
 export default {
     components: {
@@ -55,21 +55,21 @@ export default {
 
         async handleLogout() {
             try {
-                this.$router.push('/');
+                this.$router.push("/");
                 await new Promise((res, rej) => {
                     setTimeout(async () => {
                         try {
-                            this.$store.commit('setInterceptor', null);
-                            await axios.post('http://localhost:8080/api/admin/logout');
-                            console.log('logout success');
+                            this.$store.commit("setInterceptor", null);
+                            await axios.post("http://localhost:8080/api/admin/logout");
+                            console.log("logout success");
                             res();
                         } catch (e) {
                             rej(e);
                         }
-                    }, 1000);
+                    }, 0);
                 });
             } catch (e) {
-                console.warn('server error');
+                console.warn("server error");
             }
         },
     },

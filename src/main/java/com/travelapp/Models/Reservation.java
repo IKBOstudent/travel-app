@@ -1,8 +1,12 @@
 package com.travelapp.Models;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
@@ -14,7 +18,7 @@ import java.time.temporal.ChronoUnit;
 @NoArgsConstructor
 @ToString
 @Entity
-@Table(name="reservations_table")
+@Table(name = "reservations_table")
 public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

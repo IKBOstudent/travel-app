@@ -1,10 +1,7 @@
 <template>
     <div class="w-full flex justify-center mt-8">
-        <form
-            @submit.prevent="handleSubmit"
-            class="container max-w-xs flex flex-col items-center gap-3"
-        >
-            <h1 class="p-2 font-semibold text-2xl text-neutral-900">Администратор</h1>
+        <form @submit.prevent="handleSubmit" class="container max-w-xs flex flex-col items-center gap-3">
+            <h1 class="p-2 font-semibold text-2xl text-neutral-900">Admin</h1>
             <input
                 :value="username"
                 type="text"
@@ -23,23 +20,19 @@
                 @input="setPassword"
             />
             <div v-if="invalid" class="inline-flex items-center w-full text-red-600">
-                <strong class="inline-flex mr-1"><error-svg class="mr-2 h-5" />Ошибка: </strong>
-                Произошла ошибка
+                <strong class="inline-flex items-center mr-1"><error-svg class="mr-2 h-5 stroke-2" />Error: </strong>
+                Something went wrong.
             </div>
-            <button
-                class="w-full h-12 font-semibold text-lg btn-black"
-                :disabled="loading"
-                type="submit"
-            >
-                Войти
+            <button class="w-full h-12 font-semibold text-lg btn-black border-2" :disabled="loading" type="submit">
+                Login
             </button>
         </form>
     </div>
 </template>
 <script>
-import axios from 'axios';
+import axios from "axios";
 
-import ErrorSvg from '../svgs/ErrorSvg.vue';
+import ErrorSvg from "../svgs/ErrorSvg.vue";
 
 export default {
     components: {
@@ -47,9 +40,9 @@ export default {
     },
     data() {
         return {
-            username: '',
-            password: '',
-            invalid: true,
+            username: "",
+            password: "",
+            invalid: false,
             loading: false,
         };
     },
@@ -60,19 +53,19 @@ export default {
                 await new Promise((res, rej) => {
                     setTimeout(async () => {
                         try {
-                            const axiosInterceptor = axios.interceptors.request.use((config) => {
-                                if (config.headers && !config.headers['Authorization']) {
-                                    config.headers['Authorization'] =
-                                        'Basic ' + window.btoa(this.username + ':' + this.password);
+                            const axiosInterceptor = axios.interceptors.request.use(config => {
+                                if (config.headers && !config.headers["Authorization"]) {
+                                    config.headers["Authorization"] =
+                                        "Basic " + window.btoa(this.username + ":" + this.password);
                                 }
-                                config.headers['Content-Type'];
-                                config.headers['Accept'] = 'application/json';
+                                config.headers["Content-Type"];
+                                config.headers["Accept"] = "application/json";
                                 return config;
                             });
 
-                            await axios.post('http://localhost:8080/api/admin/login', {});
-                            this.$emit('auth');
-                            this.$store.commit('setInterceptor', axiosInterceptor);
+                            await axios.post("http://localhost:8080/api/admin/login", {});
+                            this.$emit("auth");
+                            this.$store.commit("setInterceptor", axiosInterceptor);
                             res();
                         } catch (e) {
                             rej(e);
