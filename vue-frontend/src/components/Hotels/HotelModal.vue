@@ -87,7 +87,7 @@ export default {
                 await new Promise((res, rej) => {
                     setTimeout(async () => {
                         try {
-                            let url = `http://localhost:8080/api/reservations?`;
+                            let url = `/api/reservations?`;
                             url += `room_id=${this.$store.state.hotel.info.id}`;
 
                             const { data } = await axios.post(url, body);

@@ -71,7 +71,7 @@ export default {
                         try {
                             const query = this.$route.query;
 
-                            let url = `http://localhost:8080/api/rooms?`;
+                            let url = `/api/rooms?`;
                             url += `city=${query.city}`;
                             url += `&guests=${query.guests}`;
                             url += `&check_in_date=${query.checkInDate}`;

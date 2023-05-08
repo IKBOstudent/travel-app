@@ -113,7 +113,7 @@ export default {
                         try {
                             const query = this.$route.query;
 
-                            let url = `http://localhost:8080/api/flights?`;
+                            let url = `/api/flights?`;
                             if (forward) {
                                 url += `origin=${query.origin}`;
                                 url += `&destination=${query.destination}`;

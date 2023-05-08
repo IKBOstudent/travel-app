@@ -63,7 +63,7 @@ export default {
                                 return config;
                             });
 
-                            await axios.post("http://localhost:8080/api/admin/login", {});
+                            await axios.post("/api/admin/login", {});
                             this.$emit("auth");
                             this.$store.commit("setInterceptor", axiosInterceptor);
                             res();

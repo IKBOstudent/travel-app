@@ -47,10 +47,8 @@ public class RoomService {
         List<Room> roomsResult = new ArrayList<>();
         List<Room> rooms = roomRepository.findRoomCustom(city, guests);
         for (Room room : rooms) {
-            System.out.println(room);
             Reservation sameDateReservation = reservationRepository.findFirstReservationCustom(room.getId(), checkInDate, checkOutDate);
             if (sameDateReservation == null) {
-                System.out.println("berem");
                 roomsResult.add(room);
             }
         }

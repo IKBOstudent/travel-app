@@ -14,7 +14,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("api/rooms")
-@CrossOrigin(origins = "http://localhost:8081")
+//@CrossOrigin(origins = "http://localhost:8081")
 public class RoomController {
 
     private final RoomService roomService;
@@ -25,7 +25,7 @@ public class RoomController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<Room>> getRoom(
+    public ResponseEntity<List<Room>> getRooms(
             @RequestParam(value = "city") String city,
             @RequestParam(value = "guests") int guests,
             @RequestParam(value = "check_in_date") LocalDate checkInDate,

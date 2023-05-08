@@ -60,7 +60,7 @@ export default {
                     setTimeout(async () => {
                         try {
                             this.$store.commit("setInterceptor", null);
-                            await axios.post("http://localhost:8080/api/admin/logout");
+                            await axios.post("/api/admin/logout");
                             console.log("logout success");
                             res();
                         } catch (e) {

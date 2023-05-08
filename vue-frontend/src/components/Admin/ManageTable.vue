@@ -139,12 +139,12 @@ export default {
                     setTimeout(async () => {
                         try {
                             this.controller = new AbortController();
-                            let response = await axios.get(`http://localhost:8080/api/${name}/metadata`, {
+                            let response = await axios.get(`/api/${name}/metadata`, {
                                 signal: this.controller.signal,
                             });
                             this.tableHead = response.data;
 
-                            response = await axios.get(`http://localhost:8080/api/${name}/all`, {
+                            response = await axios.get(`/api/${name}/all`, {
                                 signal: this.controller.signal,
                             });
                             this.controller = null;
@@ -174,7 +174,7 @@ export default {
                     setTimeout(async () => {
                         try {
                             const rowData = { ...this.newRowData };
-                            let url = `http://localhost:8080/api/${this.tableName}`;
+                            let url = `/api/${this.tableName}`;
                             if (this.tableName === tableNames[2]) {
                                 url += `?hotel_id=${rowData["hotel"]}`;
                                 delete rowData["hotel"];
@@ -184,7 +184,7 @@ export default {
                             }
                             const { data } = await axios.post(url, rowData);
 
-                            let response = await axios.get(`http://localhost:8080/api/${this.tableName}/metadata`);
+                            let response = await axios.get(`/api/${this.tableName}/metadata`);
                             this.tableHead = response.data;
 
                             this.table.push(data);
@@ -206,7 +206,7 @@ export default {
                 await new Promise((res, rej) => {
                     setTimeout(async () => {
                         try {
-                            await axios.delete(`http://localhost:8080/api/${this.tableName}/${id}`);
+                            await axios.delete(`/api/${this.tableName}/${id}`);
 
                             this.table = this.table.filter(row => row.id !== id);
 

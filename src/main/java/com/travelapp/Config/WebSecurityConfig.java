@@ -36,7 +36,7 @@ public class WebSecurityConfig {
                 .csrf().disable()
                 .authorizeHttpRequests()
                 .requestMatchers(HttpMethod.GET, "/api/flights", "/api/rooms").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/reservations", "/api/flights/book").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/reservations", "/api/flights/{id}").permitAll()
                 .requestMatchers("/api/**").authenticated()
                 .anyRequest().permitAll()
                 .and()

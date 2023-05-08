@@ -14,7 +14,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("api/flights")
-@CrossOrigin(origins = "http://localhost:8081")
+//@CrossOrigin(origins = "http://localhost:8081")
 public class FlightController {
 
     private final FlightService flightService;
@@ -65,9 +65,9 @@ public class FlightController {
         }
     }
 
-    @PostMapping("/book")
-    public ResponseEntity<Flight> bookFlight(@RequestParam(value = "flight_id") Long flightId) {
-        Flight flight = flightService.getFlightById(flightId);
+    @PostMapping("/{id}")
+    public ResponseEntity<Flight> bookFlight(@PathVariable Long id) {
+        Flight flight = flightService.getFlightById(id);
         if (flight != null) {
             return ResponseEntity.ok().body(flight);
         } else {
