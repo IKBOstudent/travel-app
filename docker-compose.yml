@@ -1,33 +1,10 @@
 version: '3'
 
 services:
-  db:
-    image: "postgres:9.6-alpine"
-    container_name: db
-    restart: always
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_DB=travel_app
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=12345
-      - PGDATA=/var/lib/postgresql/data/pgdata
-
   travel:
     build: ./
     container_name: travel-app
-    environment:
-      - DB_SERVER:db
-      - POSTGRES_DB=travel_app
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=12345
     ports:
       - "8080:8080"
-
-    depends_on:
-      - db
-
-volumes:
-  postgres_data:
+    env_file:
+      - .env

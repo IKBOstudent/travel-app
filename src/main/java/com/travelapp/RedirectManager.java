@@ -28,7 +28,6 @@ public class RedirectManager implements Filter {
             chain.doFilter(request, response);
             return;
         }
-        System.out.println(path);
         request.getRequestDispatcher("/").forward(request, response);
     }
 
