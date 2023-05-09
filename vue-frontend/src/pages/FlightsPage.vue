@@ -108,53 +108,43 @@ export default {
                     this.backwardStatus = statuses.loading;
                 }
 
-                await new Promise((res, rej) => {
-                    setTimeout(async () => {
-                        try {
-                            const query = this.$route.query;
+                const query = this.$route.query;
 
-                            let url = `/api/flights?`;
-                            if (forward) {
-                                url += `origin=${query.origin}`;
-                                url += `&destination=${query.destination}`;
-                                url += `&date=${query.departureDate}`;
-                            } else {
-                                url += `origin=${query.destination}`;
-                                url += `&destination=${query.origin}`;
-                                url += `&date=${query.returnDate}`;
-                            }
+                let url = `/api/flights?`;
+                if (forward) {
+                    url += `origin=${query.origin}`;
+                    url += `&destination=${query.destination}`;
+                    url += `&date=${query.departureDate}`;
+                } else {
+                    url += `origin=${query.destination}`;
+                    url += `&destination=${query.origin}`;
+                    url += `&date=${query.returnDate}`;
+                }
 
-                            const { data } = await axios.get(url);
-                            console.log(data);
-                            data.forEach(flight => {
-                                flight.arrivalTime = flight.arrivalTime.slice(0, 5);
-                                flight.departureTime = flight.departureTime.slice(0, 5);
-                                flight.price = new Intl.NumberFormat("ru-RU", {
-                                    style: "currency",
-                                    currency: "RUB",
-                                }).format(flight.price);
-                                flight.date = new Intl.DateTimeFormat("ru-RU", {
-                                    weekday: "long",
-                                    year: "numeric",
-                                    month: "long",
-                                    day: "numeric",
-                                }).format(new Date(flight.date));
-                            });
-
-                            if (forward) {
-                                this.flights = data;
-                                this.forwardStatus = statuses.ok;
-                            } else {
-                                this.returnFlights = data;
-                                this.backwardStatus = statuses.ok;
-                            }
-
-                            res();
-                        } catch (e) {
-                            rej(e);
-                        }
-                    }, 1000);
+                const { data } = await axios.get(url);
+                console.log(data);
+                data.forEach(flight => {
+                    flight.arrivalTime = flight.arrivalTime.slice(0, 5);
+                    flight.departureTime = flight.departureTime.slice(0, 5);
+                    flight.price = new Intl.NumberFormat("ru-RU", {
+                        style: "currency",
+                        currency: "RUB",
+                    }).format(flight.price);
+                    flight.date = new Intl.DateTimeFormat("ru-RU", {
+                        weekday: "long",
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                    }).format(new Date(flight.date));
                 });
+
+                if (forward) {
+                    this.flights = data;
+                    this.forwardStatus = statuses.ok;
+                } else {
+                    this.returnFlights = data;
+                    this.backwardStatus = statuses.ok;
+                }
             } catch (e) {
                 console.log(e);
                 if (forward) {

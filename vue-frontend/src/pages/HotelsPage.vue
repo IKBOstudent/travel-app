@@ -66,57 +66,47 @@ export default {
             try {
                 this.resultStatus = statuses.loading;
 
-                await new Promise((res, rej) => {
-                    setTimeout(async () => {
-                        try {
-                            const query = this.$route.query;
+                const query = this.$route.query;
 
-                            let url = `/api/rooms?`;
-                            url += `city=${query.city}`;
-                            url += `&guests=${query.guests}`;
-                            url += `&check_in_date=${query.checkInDate}`;
-                            url += `&check_out_date=${query.checkOutDate}`;
+                let url = `/api/rooms?`;
+                url += `city=${query.city}`;
+                url += `&guests=${query.guests}`;
+                url += `&check_in_date=${query.checkInDate}`;
+                url += `&check_out_date=${query.checkOutDate}`;
 
-                            const { data } = await axios.get(url);
+                const { data } = await axios.get(url);
 
-                            const nights =
-                                (new Date(query.checkOutDate) - new Date(query.checkInDate)) / (1000 * 60 * 60 * 24);
+                const nights = (new Date(query.checkOutDate) - new Date(query.checkInDate)) / (1000 * 60 * 60 * 24);
 
-                            let hotels = [];
-                            if (data.length > 0) {
-                                let currentId = data[0];
-                                data.forEach(room => {
-                                    const formRoom = {
-                                        id: room.id,
-                                        beds: room.beds,
-                                        price: new Intl.NumberFormat("ru-RU", {
-                                            style: "currency",
-                                            currency: "RUB",
-                                        }).format(room.nightPrice * nights),
-                                        nights,
-                                    };
-                                    if (room.hotel.id !== currentId) {
-                                        currentId = room.hotel.id;
+                let hotels = [];
+                if (data.length > 0) {
+                    let currentId = data[0];
+                    data.forEach(room => {
+                        const formRoom = {
+                            id: room.id,
+                            beds: room.beds,
+                            price: new Intl.NumberFormat("ru-RU", {
+                                style: "currency",
+                                currency: "RUB",
+                            }).format(room.nightPrice * nights),
+                            nights,
+                        };
+                        if (room.hotel.id !== currentId) {
+                            currentId = room.hotel.id;
 
-                                        hotels.push({
-                                            ...room.hotel,
-                                            rooms: [formRoom],
-                                        });
-                                    } else {
-                                        hotels[hotels.length - 1].rooms.push(formRoom);
-                                    }
-                                });
-                            }
-                            console.log(hotels);
-                            this.hotels = hotels;
-
-                            this.resultStatus = statuses.ok;
-                            res();
-                        } catch (e) {
-                            rej(e);
+                            hotels.push({
+                                ...room.hotel,
+                                rooms: [formRoom],
+                            });
+                        } else {
+                            hotels[hotels.length - 1].rooms.push(formRoom);
                         }
-                    }, 1000);
-                });
+                    });
+                }
+                console.log(hotels);
+                this.hotels = hotels;
+
+                this.resultStatus = statuses.ok;
             } catch (e) {
                 this.resultStatus = statuses.error;
             }

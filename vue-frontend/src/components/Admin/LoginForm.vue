@@ -50,28 +50,19 @@ export default {
         async handleSubmit() {
             try {
                 this.loading = true;
-                await new Promise((res, rej) => {
-                    setTimeout(async () => {
-                        try {
-                            const axiosInterceptor = axios.interceptors.request.use(config => {
-                                if (config.headers && !config.headers["Authorization"]) {
-                                    config.headers["Authorization"] =
-                                        "Basic " + window.btoa(this.username + ":" + this.password);
-                                }
-                                config.headers["Content-Type"];
-                                config.headers["Accept"] = "application/json";
-                                return config;
-                            });
 
-                            await axios.post("/api/admin/login", {});
-                            this.$emit("auth");
-                            this.$store.commit("setInterceptor", axiosInterceptor);
-                            res();
-                        } catch (e) {
-                            rej(e);
-                        }
-                    }, 1000);
+                const axiosInterceptor = axios.interceptors.request.use(config => {
+                    if (config.headers && !config.headers["Authorization"]) {
+                        config.headers["Authorization"] = "Basic " + window.btoa(this.username + ":" + this.password);
+                    }
+                    config.headers["Content-Type"];
+                    config.headers["Accept"] = "application/json";
+                    return config;
                 });
+
+                await axios.post("/api/admin/login", {});
+                this.$emit("auth");
+                this.$store.commit("setInterceptor", axiosInterceptor);
             } catch (e) {
                 this.invalid = true;
             } finally {

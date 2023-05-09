@@ -56,18 +56,10 @@ export default {
         async handleLogout() {
             try {
                 this.$router.push("/");
-                await new Promise((res, rej) => {
-                    setTimeout(async () => {
-                        try {
-                            this.$store.commit("setInterceptor", null);
-                            await axios.post("/api/admin/logout");
-                            console.log("logout success");
-                            res();
-                        } catch (e) {
-                            rej(e);
-                        }
-                    }, 0);
-                });
+
+                this.$store.commit("setInterceptor", null);
+                await axios.post("/api/admin/logout");
+                console.log("logout success");
             } catch (e) {
                 console.warn("server error");
             }

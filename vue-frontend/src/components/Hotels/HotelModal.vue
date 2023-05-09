@@ -84,21 +84,12 @@ export default {
                     checkOutDate: this.$route.query.checkOutDate,
                 };
 
-                await new Promise((res, rej) => {
-                    setTimeout(async () => {
-                        try {
-                            let url = `/api/reservations?`;
-                            url += `room_id=${this.$store.state.hotel.info.id}`;
+                let url = `/api/reservations?`;
+                url += `room_id=${this.$store.state.hotel.info.id}`;
 
-                            const { data } = await axios.post(url, body);
-                            this.reservationId = data.id;
-                            this.status = statuses.ok;
-                            res();
-                        } catch (e) {
-                            rej(e);
-                        }
-                    }, 1000);
-                });
+                const { data } = await axios.post(url, body);
+                this.reservationId = data.id;
+                this.status = statuses.ok;
             } catch (e) {
                 this.status = statuses.error;
             }

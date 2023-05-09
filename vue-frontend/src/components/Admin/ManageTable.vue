@@ -130,33 +130,24 @@ export default {
     },
     methods: {
         async fetchTable(name) {
-            this.tableStatus = statuses.loading;
-            if (this.controller) {
-                this.controller.abort();
-            }
             try {
-                await new Promise((res, rej) => {
-                    setTimeout(async () => {
-                        try {
-                            this.controller = new AbortController();
-                            let response = await axios.get(`/api/${name}/metadata`, {
-                                signal: this.controller.signal,
-                            });
-                            this.tableHead = response.data;
-
-                            response = await axios.get(`/api/${name}/all`, {
-                                signal: this.controller.signal,
-                            });
-                            this.controller = null;
-                            this.table = response.data;
-
-                            this.tableStatus = statuses.ok;
-                            res();
-                        } catch (e) {
-                            rej(e);
-                        }
-                    }, 0);
+                this.tableStatus = statuses.loading;
+                if (this.controller) {
+                    this.controller.abort();
+                }
+                this.controller = new AbortController();
+                let response = await axios.get(`/api/${name}/metadata`, {
+                    signal: this.controller.signal,
                 });
+                this.tableHead = response.data;
+
+                response = await axios.get(`/api/${name}/all`, {
+                    signal: this.controller.signal,
+                });
+                this.controller = null;
+                this.table = response.data;
+
+                this.tableStatus = statuses.ok;
             } catch (e) {
                 if (e.name !== "CanceledError") {
                     console.error("ERROR", e);
@@ -170,31 +161,23 @@ export default {
         async handleAddRow() {
             try {
                 this.tableStatus = statuses.loading;
-                await new Promise((res, rej) => {
-                    setTimeout(async () => {
-                        try {
-                            const rowData = { ...this.newRowData };
-                            let url = `/api/${this.tableName}`;
-                            if (this.tableName === tableNames[2]) {
-                                url += `?hotel_id=${rowData["hotel"]}`;
-                                delete rowData["hotel"];
-                            } else if (this.tableName === tableNames[3]) {
-                                url += `?room_id=${rowData["room"]}`;
-                                delete rowData["room"];
-                            }
-                            const { data } = await axios.post(url, rowData);
 
-                            let response = await axios.get(`/api/${this.tableName}/metadata`);
-                            this.tableHead = response.data;
+                const rowData = { ...this.newRowData };
+                let url = `/api/${this.tableName}`;
+                if (this.tableName === tableNames[2]) {
+                    url += `?hotel_id=${rowData["hotel"]}`;
+                    delete rowData["hotel"];
+                } else if (this.tableName === tableNames[3]) {
+                    url += `?room_id=${rowData["room"]}`;
+                    delete rowData["room"];
+                }
+                const { data } = await axios.post(url, rowData);
 
-                            this.table.push(data);
-                            this.tableStatus = statuses.ok;
-                            res();
-                        } catch (e) {
-                            rej(e);
-                        }
-                    }, 0);
-                });
+                let response = await axios.get(`/api/${this.tableName}/metadata`);
+                this.tableHead = response.data;
+
+                this.table.push(data);
+                this.tableStatus = statuses.ok;
             } catch (e) {
                 this.tableStatus = statuses.error;
             }
@@ -203,20 +186,11 @@ export default {
         async deleteRow(id) {
             try {
                 this.tableStatus = statuses.loading;
-                await new Promise((res, rej) => {
-                    setTimeout(async () => {
-                        try {
-                            await axios.delete(`/api/${this.tableName}/${id}`);
 
-                            this.table = this.table.filter(row => row.id !== id);
+                await axios.delete(`/api/${this.tableName}/${id}`);
 
-                            this.tableStatus = statuses.ok;
-                            res();
-                        } catch (e) {
-                            rej(e);
-                        }
-                    }, 0);
-                });
+                this.table = this.table.filter(row => row.id !== id);
+                this.tableStatus = statuses.ok;
             } catch (e) {
                 this.tableStatus = statuses.error;
             }
